@@ -3,16 +3,17 @@ import 'package:flutter/cupertino.dart';
 
 import '../../config/colors_collection.dart';
 import '../../config/text_style_collection.dart';
+import 'login.dart';
 
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class signup extends StatefulWidget {
+  const signup({Key? key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<signup> createState() => _signupState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _signupState extends State<signup> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -68,6 +69,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.7),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
               ),
 
 
@@ -199,7 +208,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             padding: EdgeInsets.fromLTRB(80, 0, 80, 0),
             child: GestureDetector(
               onTap: (){
-
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>login()));
 
               },
               child: Container(

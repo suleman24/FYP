@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'UI/auth ui/login.dart';
 import 'UI/auth ui/signup.dart';
 
 
@@ -9,7 +10,7 @@ void main() {
       title: 'Suzo',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
-      home: SignUpScreen(),
+      home: login(),
     ),);
 
 }
