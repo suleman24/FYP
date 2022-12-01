@@ -38,7 +38,7 @@ class _loginState extends State<login> {
                 color: AppColors.signuptextbackground,
                 border: Border.all(
                   color: Colors.white,
-                  width: 5,
+                  width: 3,
                 ),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(100),
