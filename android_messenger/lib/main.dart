@@ -10,10 +10,5 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   runApp(
-      MaterialApp(
-        title: 'Suzo',
-        debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.dark,
-        home: login(),
-      ),);
+      MaterialApp(debugShowCheckedModeBanner: false, home: login()));
 }

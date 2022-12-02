@@ -1,21 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-import 'package:loading_overlay/loading_overlay.dart';
-
-import '../../Firebase_Management/cloud_data_management.dart';
-import '../../config/colors_collection.dart';
 import '../auth ui/common_auth_methods.dart';
+import '../config/colors_collection.dart';
 
 class TakePrimaryUserData extends StatefulWidget {
-  const TakePrimaryUserData({Key? key}) : super(key: key);
+  const TakePrimaryUserData({Key? key, this.user_email}) : super(key: key);
 
+  final user_email;
   @override
   _TakePrimaryUserDataState createState() => _TakePrimaryUserDataState();
 }
@@ -29,17 +26,17 @@ class _TakePrimaryUserDataState extends State<TakePrimaryUserData> {
   final TextEditingController _userName = TextEditingController();
   final TextEditingController _userAbout = TextEditingController();
 
-  final CloudStoreDataManagement _cloudStoreDataManagement =
-      CloudStoreDataManagement();
+  late String user_email = widget.user_email;
+
+  // final CloudStoreDataManagement _cloudStoreDataManagement =
+  //     CloudStoreDataManagement();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
       backgroundColor: const Color.fromRGBO(34, 48, 60, 1),
-      body: LoadingOverlay(
-        isLoading: this._isLoading,
-        child: Container(
+      body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: Form(
@@ -80,7 +77,7 @@ class _TakePrimaryUserDataState extends State<TakePrimaryUserData> {
             ),
           ),
         ),
-      ),
+
     ));
   }
 
@@ -109,7 +106,6 @@ class _TakePrimaryUserDataState extends State<TakePrimaryUserData> {
         style: ElevatedButton.styleFrom(shape: new RoundedRectangleBorder(
           borderRadius: new BorderRadius.circular(30.0),
         ),
-            backgroundColor: Colors.white
         ),
 
 
@@ -123,57 +119,42 @@ class _TakePrimaryUserDataState extends State<TakePrimaryUserData> {
           ),
         ),
         onPressed: () async {
-          if (this._takeUserPrimaryInformationKey.currentState!.validate()) {
-            print('Validated');
-
-            SystemChannels.textInput.invokeMethod('TextInput.hide');
-
-            if (mounted) {
-              setState(() {
-                this._isLoading = true;
-              });
-            }
-
-            final bool canRegisterNewUser = await _cloudStoreDataManagement
-                .checkThisUserAlreadyPresentOrNot(
-                userName: this._userName.text);
-
-            String msg = '';
-
-            if (!canRegisterNewUser)
-              msg = 'User Name Already Present';
-            else {
-              final bool _userEntryResponse =
-              await _cloudStoreDataManagement.registerNewUser(
-                  userName: this._userName.text,
-                  userAbout: this._userAbout.text,
-                  userEmail:
-                  FirebaseAuth.instance.currentUser!.email.toString());
-              if (_userEntryResponse) {
-                msg = 'User data Entry Successfully';
 
 
-                // Navigator.pushAndRemoveUntil(
-                //     context,
-                //     MaterialPageRoute(builder: (_) => MainScreen()),
-                //     (route) => false);
-              } else
-                msg = 'User Data Not Entry Successfully';
-            }
+          final String? _getToken = await FirebaseMessaging.instance.getToken();
+
+          String _collectionName = 'users';
+
+          // final String? _getToken = '000';
+
+          final String currDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+          final String currTime = "${DateFormat('hh:mm a').format(DateTime.now())}";
+
+          print(_userName.text);
+          print('**********');
+
+          print(_getToken);
+
+          FirebaseFirestore.instance
+              .collection(_collectionName).doc(user_email).set({
+            "user_name": _userName.text,
+            "about": _userAbout.text,
+            "activity": [],
+            "connection_request": [],
+            "connections": {},
+            "creation_date": currDate,
+            "creation_time": currTime,
+            "phone_number": "",
+            "profile_pic": "",
+            "token": _getToken.toString(),
+            "total_connections": "",
+          });
 
 
+          print('************');
 
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(msg)));
 
-            if (mounted) {
-              setState(() {
-                this._isLoading = false;
-              });
-            }
-          } else {
-            print('Not Validated');
-          }
         },
       ),
 

@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:loading_overlay/loading_overlay.dart';
+
 import '../../auth/authentication.dart';
-import '../../config/colors_collection.dart';
-import '../../config/text_style_collection.dart';
 import '../NewUserEntry/new_user_entry.dart';
+import '../config/colors_collection.dart';
+import '../config/text_style_collection.dart';
 import 'login.dart';
 
 
@@ -15,6 +14,8 @@ class signup extends StatefulWidget {
   @override
   State<signup> createState() => _signupState();
 }
+
+late String user_email;
 
 class _signupState extends State<signup> {
 
@@ -40,9 +41,7 @@ class _signupState extends State<signup> {
       child: Scaffold(
         backgroundColor: Color(0xff0f1021),
 
-      body: LoadingOverlay(
-        isLoading: _isLoading,
-        child: SingleChildScrollView(
+      body:  SingleChildScrollView(
           child: Column(
               children: [
 
@@ -211,7 +210,6 @@ class _signupState extends State<signup> {
                               style: ElevatedButton.styleFrom(shape: new RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0),
                               ),
-                                  backgroundColor: Colors.white
                               ),
 
 
@@ -225,6 +223,8 @@ class _signupState extends State<signup> {
                                 ),
                               ),
                               onPressed:()async {
+
+                                user_email = email.text;
 
                                 _isLoading = true;
 
@@ -296,7 +296,7 @@ class _signupState extends State<signup> {
               ],
             ),
         ),
-      ),
+
 
         bottomNavigationBar: BottomAppBar(
           color: Colors.transparent,
@@ -349,10 +349,10 @@ class _signupState extends State<signup> {
 
 showAlertDialogForSucces(context){
   Widget continueButton = TextButton(
-    child: Text("Go to Login"),
+    child: Text("Continue"),
     onPressed:  () {
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const TakePrimaryUserData()));
+          MaterialPageRoute(builder: (context) => TakePrimaryUserData(user_email: user_email,)));
     },
   );
 

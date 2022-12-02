@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:android_messenger/config/colors_collection.dart';
+
+import 'colors_collection.dart';
 
 class TextStyleCollection{
 
