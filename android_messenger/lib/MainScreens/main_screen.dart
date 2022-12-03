@@ -1,7 +1,12 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
 import 'chatAndActivityScreen.dart';
+import 'general_connection_section.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -12,11 +17,13 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
+  final _drawerController = ZoomDrawerController();
+
   int _currIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(length: 3,
+    return DefaultTabController(length: 2,
         child: WillPopScope(
           onWillPop: () async {
             if (_currIndex > 0)
@@ -27,6 +34,8 @@ class _MainScreenState extends State<MainScreen> {
           },
           child: Scaffold(
             backgroundColor: Colors.white,
+
+            drawer: _drawer(),
 
             appBar: AppBar(
               brightness: Brightness.light,
@@ -78,7 +87,7 @@ class _MainScreenState extends State<MainScreen> {
               children: [
                 ChatAndActivityScreen(),
                 // LogsCollection(),
-                // GeneralMessagingSection(),
+                GeneralMessagingSection(),
               ],
             ),
           ),
@@ -128,19 +137,19 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ),
-          Tab(
-            child: Text(
-              "Logs",
-              style: TextStyle(
-                fontSize: 20.0,
-                fontFamily: 'Lora',
-                fontWeight: FontWeight.w500,
-                letterSpacing: 1.0,
-                  color: Colors.white
-
-              ),
-            ),
-          ),
+          // Tab(
+          //   child: Text(
+          //     "Logs",
+          //     style: TextStyle(
+          //       fontSize: 20.0,
+          //       fontFamily: 'Lora',
+          //       fontWeight: FontWeight.w500,
+          //       letterSpacing: 1.0,
+          //         color: Colors.white
+          //
+          //     ),
+          //   ),
+          // ),
           Tab(
             icon: Icon(
               Icons.store,
@@ -150,4 +159,148 @@ class _MainScreenState extends State<MainScreen> {
         ],
       );
     }
+
+
+
+
+
+    Widget _drawer(){
+    return Drawer(
+      elevation: 10,
+      backgroundColor: Colors.blue,
+
+      child: Container(
+        color: Colors.blue,
+
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            SizedBox(
+              height: 10.0,
+            ),
+            GestureDetector(
+              onTap: () {
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (_) => ProfileScreen()));
+              },
+              child: Center(
+                child: CircleAvatar(
+                  backgroundImage: ExactAssetImage('assets/images/google.png'),
+                  backgroundColor: Colors.white,
+                  radius: MediaQuery.of(context).orientation ==
+                      Orientation.portrait
+                      ? MediaQuery.of(context).size.height *
+                      (1.2 / 8) /
+                      2.5
+                      : MediaQuery.of(context).size.height *
+                      (2.5 / 8) /
+                      2.5,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 30.0,
+            ),
+            _menuOptions(Icons.person_outline_rounded, 'Profile'),
+            SizedBox(
+              height: 10.0,
+            ),
+            _menuOptions(Icons.settings, 'Setting'),
+            SizedBox(
+              height: 10.0,
+            ),
+            _menuOptions(Icons.description_outlined, 'About'),
+            SizedBox(
+              height: 30.0,
+            ),
+            exitButtonCall(),
+          ],
+        ),
+      ),
+    );
+    }
+
+  Widget _menuOptions(IconData icon, String menuOptionIs) {
+    return OpenContainer(
+      transitionType: ContainerTransitionType.fadeThrough,
+      transitionDuration: Duration(
+        milliseconds: 500,
+      ),
+      closedElevation: 0.0,
+      openElevation: 3.0,
+      closedColor: Colors.blue,
+      openColor: Colors.white,
+      middleColor: Colors.blue,
+      onClosed: (value) {
+        // print('Profile Page Closed');
+        // if (mounted) {
+        //   setState(() {
+        //     ImportantThings.findImageUrlAndUserName();
+        //   });
+        // }
+      },
+      openBuilder: (context, openWidget) {
+        // if (menuOptionIs == 'Profile')
+        //   return ProfileScreen();
+        // else if (menuOptionIs == 'Setting')
+        //   return SettingsWindow();
+        // else if (menuOptionIs == 'About') return AboutSection();
+        return Center();
+      },
+      closedBuilder: (context, closeWidget) {
+        return SizedBox(
+          height: 60.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Text(
+                menuOptionIs,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget exitButtonCall() {
+    return GestureDetector(
+      onTap: () async {
+        await SystemNavigator.pop(animated: true);
+      },
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0,20, 0, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.exit_to_app_rounded,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+            Text(
+              'Exit',
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   }

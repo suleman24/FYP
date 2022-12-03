@@ -246,7 +246,7 @@ class _ChatAndActivityScreenState extends State<ChatAndActivityScreen> {
             //   });
             // }
           },
-          itemCount: 2,
+          itemCount: _allConnectionsUserName.length,
           itemBuilder: (context, position) {
             return chatTileContainer(
                 context, position, _allConnectionsUserName[position]);
