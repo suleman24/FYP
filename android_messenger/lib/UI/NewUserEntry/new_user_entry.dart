@@ -1,3 +1,4 @@
+import 'package:android_messenger/MainScreens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -153,7 +154,8 @@ class _TakePrimaryUserDataState extends State<TakePrimaryUserData> {
 
 
           print('************');
-
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => MainScreen()));
 
         },
       ),
