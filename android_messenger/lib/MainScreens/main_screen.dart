@@ -4,6 +4,8 @@ import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
+import '../auth/authentication.dart';
+import '../auth/check.dart';
 import 'chatAndActivityScreen.dart';
 import 'general_connection_section.dart';
 
@@ -213,7 +215,7 @@ class _MainScreenState extends State<MainScreen> {
             SizedBox(
               height: 30.0,
             ),
-            exitButtonCall(),
+            logout(),
           ],
         ),
       ),
@@ -274,10 +276,12 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget exitButtonCall() {
+  Widget logout() {
     return GestureDetector(
       onTap: () async {
-        await SystemNavigator.pop(animated: true);
+        AuthenticationHelper().signOut(context);
+
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Check()));
       },
       child: Padding(
         padding: EdgeInsets.fromLTRB(0,20, 0, 0),
@@ -292,7 +296,7 @@ class _MainScreenState extends State<MainScreen> {
               width: 10.0,
             ),
             Text(
-              'Exit',
+              'Logout',
               style: TextStyle(
                 fontSize: 20.0,
                 color: Colors.white,
