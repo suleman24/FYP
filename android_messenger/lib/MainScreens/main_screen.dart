@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
 import '../auth/authentication.dart';
 import '../auth/check.dart';
+import 'MenuScreens/profile_screen.dart';
 import 'chatAndActivityScreen.dart';
 import 'general_connection_section.dart';
 
@@ -21,7 +23,18 @@ class _MainScreenState extends State<MainScreen> {
 
   final _drawerController = ZoomDrawerController();
 
-  int _currIndex = 0;
+  late String name = 'hello';
+  late String image = '0';
+  late String about = '';
+  late String createdate = '';
+  late String createtime = '';
+  late String email = '';
+  late String tempimg = '';
+
+
+
+
+    int _currIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +93,7 @@ class _MainScreenState extends State<MainScreen> {
                     },
                   ),
                 ),
+
               ],
               bottom: _bottom(),
             ),
@@ -87,6 +101,7 @@ class _MainScreenState extends State<MainScreen> {
 
             body: TabBarView(
               children: [
+
                 ChatAndActivityScreen(),
                 // LogsCollection(),
                 GeneralMessagingSection(),
@@ -165,8 +180,63 @@ class _MainScreenState extends State<MainScreen> {
 
 
 
+  Widget profilepic(){
+    return Center(
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 30,horizontal: 30),
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blue,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(55))
+              ),
 
-    Widget _drawer(){
+              child:
+              CircleAvatar(
+                backgroundColor: Colors.transparent,
+                radius: MediaQuery.of(context).orientation ==
+                    Orientation.portrait
+                    ? MediaQuery.of(context).size.height *
+                    (1.2 / 8) /
+                    2.5
+                    : MediaQuery.of(context).size.height *
+                    (2.5 / 8) /
+                    2.5,
+                child: ClipOval(
+                    child: Container(
+                      height: 80,
+                      width: 80,
+                      child: (image != "0")
+                          ? Image.network(image)
+                          :  CircleAvatar(
+                        radius: 30.0,
+                        backgroundColor: Colors.white,
+                        backgroundImage:
+                        ExactAssetImage('assets/images/google.png'),
+                        //getProperImageProviderForConnectionsCollection(
+                        //    _userName),
+                      ),
+
+                    )
+                ),
+
+              ),
+
+            ),
+
+          ),
+
+        ],
+      ),
+    );
+  }
+
+
+
+  Widget _drawer(){
     return Drawer(
       elevation: 10,
       backgroundColor: Colors.blue,
@@ -177,41 +247,130 @@ class _MainScreenState extends State<MainScreen> {
         child: ListView(
           shrinkWrap: true,
           children: [
+            Container(
+              height: 250.0,
+              decoration: new BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  new BoxShadow(blurRadius: 40.0)
+                ],
+                borderRadius: new BorderRadius.vertical(
+                    bottom: new Radius.elliptical(
+                        MediaQuery.of(context).size.width, 100.0)),
+              ),
+
+              child: Column(
+                children: [
+
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+
+
+                    },
+                    child: Center(
+                        child: profilepic()
+                    ),
+
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Center(child:
+                  Text(name,style: TextStyle(fontSize: 18,fontWeight: FontWeight.w900,color: Colors.blue[700]),)
+                    ,),
+                ],
+              ),
+            ),
+
+
+
             SizedBox(
-              height: 10.0,
+              height: 50.0,
             ),
             GestureDetector(
-              onTap: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (_) => ProfileScreen()));
-              },
-              child: Center(
-                child: CircleAvatar(
-                  backgroundImage: ExactAssetImage('assets/images/google.png'),
-                  backgroundColor: Colors.white,
-                  radius: MediaQuery.of(context).orientation ==
-                      Orientation.portrait
-                      ? MediaQuery.of(context).size.height *
-                      (1.2 / 8) /
-                      2.5
-                      : MediaQuery.of(context).size.height *
-                      (2.5 / 8) /
-                      2.5,
-                ),
-              ),
+                onTap: () async{
+                  final uid = await AuthenticationHelper().getID();
+
+                  print(uid);
+
+
+                  var data = await FirebaseFirestore.instance
+                      .collection('users')
+                      .where('uid', isEqualTo: uid)
+                      .get();
+
+                  name = data.docs[0]['user_name'];
+                  email= data.docs[0]['email'];
+                  image = data.docs[0]['profile_pic'];
+                  tempimg = data.docs[0]['tempimg'];
+                  about = data.docs[0]['about'];
+                  createdate = data.docs[0]['creation_date'];
+                  createtime = data.docs[0]['creation_time'];
+
+
+                  print(name);
+                  print(email);
+
+
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>profilescreen(
+                    name: name,
+                    about: about,
+                    image: image,
+                    email: email,
+                    createdate: createdate,
+                    createtime: createtime,
+                    tempimg: tempimg,
+                  )));
+
+
+
+                },
+                child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.person_outline_rounded,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5,),
+                        Text('Profile',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      ],
+                    )
+                )
+
             ),
             SizedBox(
               height: 30.0,
             ),
-            _menuOptions(Icons.person_outline_rounded, 'Profile'),
-            SizedBox(
-              height: 10.0,
+            // _menuOptions(Icons.settings, 'Setting'),
+            // SizedBox(
+            //   height: 10.0,
+            // ),
+            GestureDetector(
+                onTap: () async{
+
+
+                },
+                child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.description_outlined,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5,),
+                        Text('About',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      ],
+                    )
+                )
+
             ),
-            _menuOptions(Icons.settings, 'Setting'),
-            SizedBox(
-              height: 10.0,
-            ),
-            _menuOptions(Icons.description_outlined, 'About'),
+
             SizedBox(
               height: 30.0,
             ),
@@ -222,59 +381,7 @@ class _MainScreenState extends State<MainScreen> {
     );
     }
 
-  Widget _menuOptions(IconData icon, String menuOptionIs) {
-    return OpenContainer(
-      transitionType: ContainerTransitionType.fadeThrough,
-      transitionDuration: Duration(
-        milliseconds: 500,
-      ),
-      closedElevation: 0.0,
-      openElevation: 3.0,
-      closedColor: Colors.blue,
-      openColor: Colors.white,
-      middleColor: Colors.blue,
-      onClosed: (value) {
-        // print('Profile Page Closed');
-        // if (mounted) {
-        //   setState(() {
-        //     ImportantThings.findImageUrlAndUserName();
-        //   });
-        // }
-      },
-      openBuilder: (context, openWidget) {
-        // if (menuOptionIs == 'Profile')
-        //   return ProfileScreen();
-        // else if (menuOptionIs == 'Setting')
-        //   return SettingsWindow();
-        // else if (menuOptionIs == 'About') return AboutSection();
-        return Center();
-      },
-      closedBuilder: (context, closeWidget) {
-        return SizedBox(
-          height: 60.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: Colors.white,
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Text(
-                menuOptionIs,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+
 
   Widget logout() {
     return GestureDetector(
@@ -308,3 +415,16 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+

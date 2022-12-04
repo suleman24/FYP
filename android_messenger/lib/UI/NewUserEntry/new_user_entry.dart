@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../auth/authentication.dart';
 import '../auth ui/common_auth_methods.dart';
 import '../config/colors_collection.dart';
 
@@ -289,6 +290,7 @@ class _TakePrimaryUserDataState extends State<TakePrimaryUserData> {
                 ),
                 onPressed: () async {
 
+                  final uid = await AuthenticationHelper().getID();
 
                   final String? _getToken = await FirebaseMessaging.instance.getToken();
 
@@ -319,6 +321,8 @@ class _TakePrimaryUserDataState extends State<TakePrimaryUserData> {
                     "tempimg": temp,
                     "token": _getToken.toString(),
                     "total_connections": "",
+                    'uid' : uid,
+                    'email':user_email
                   });
 
 
