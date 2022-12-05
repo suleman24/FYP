@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../Services/search_screen.dart';
 import '../auth/authentication.dart';
 import '../auth/check.dart';
 import 'MenuScreens/profile_screen.dart';
@@ -50,6 +52,30 @@ class _MainScreenState extends State<MainScreen> {
           child: Scaffold(
             backgroundColor: Colors.white,
 
+            floatingActionButton: FloatingActionButton(
+              child: Icon(
+                FontAwesomeIcons.plus
+              ),
+              onPressed: () async{
+
+
+                final uid = await AuthenticationHelper().getID();
+
+                print(uid);
+
+
+                var data = await FirebaseFirestore.instance
+                    .collection('users')
+                    .where('uid', isEqualTo: uid)
+                    .get();
+
+                email= data.docs[0]['email'];
+
+
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>searchscreen(email:email
+                )));
+              },
+            ),
             drawer: _drawer(),
 
             appBar: AppBar(
@@ -350,6 +376,31 @@ class _MainScreenState extends State<MainScreen> {
             // SizedBox(
             //   height: 10.0,
             // ),
+
+            GestureDetector(
+                onTap: () async{
+
+
+                },
+                child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          FontAwesomeIcons.mailForward,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5,),
+                        Text('Support',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      ],
+                    )
+                )
+
+            ),
+
+            SizedBox(
+              height: 30.0,
+            ),
             GestureDetector(
                 onTap: () async{
 

@@ -40,7 +40,6 @@ dependencies:
   firebase_messaging: any
   animations: any
   circle_list: any
-  flutter_icons: any
   loading_overlay: any
   flutter_zoom_drawer: any
   font_awesome_flutter: any
@@ -51,6 +50,9 @@ dependencies:
   permission_handler: ^9.0.2
   uuid: any
   open_file: any
+  sqflite: any
+  emoji_picker_flutter: any
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2

@@ -5,6 +5,8 @@ import 'package:loading_overlay/loading_overlay.dart';
 
 import 'package:animations/animations.dart';
 
+import '../Services/Chat Management/chat_screen.dart';
+
 
 class ChatAndActivityScreen extends StatefulWidget {
   const ChatAndActivityScreen({Key? key}) : super(key: key);
@@ -24,9 +26,6 @@ class _ChatAndActivityScreenState extends State<ChatAndActivityScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-
-
-
           body: LoadingOverlay(
             color: const Color.fromRGBO(0, 0, 0, 0.5),
             progressIndicator: const CircularProgressIndicator(
@@ -229,38 +228,63 @@ class _ChatAndActivityScreenState extends State<ChatAndActivityScreen> {
             width: 1.0,
           ),
         ),
-        child: ReorderableListView.builder(
-          onReorder: (first, last) {
-            // if (mounted) {
-            //   setState(() {
-            //     final String _draggableConnection =
-            //     this._allConnectionsUserName.removeAt(first);
-            //
-            //     this._allConnectionsUserName.insert(
-            //         last >= this._allConnectionsUserName.length
-            //             ? this._allConnectionsUserName.length
-            //             : last > first
-            //             ? --last
-            //             : last,
-            //         _draggableConnection);
-            //   });
-            // }
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('users').snapshots(),
+
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) return Center(
+              child: CircularProgressIndicator(),);
+
+            return ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, int index) {
+                  return Padding(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                    child: CardList(snapshot: snapshot.data,index: index,),
+                  );
+                });
+
           },
-          itemCount: _allConnectionsUserName.length,
-          itemBuilder: (context, position) {
-            return chatTileContainer(
-                context, position, _allConnectionsUserName[position]);
-          },
-        ),
+        )
       ),
     );
   }
 
+}
 
 
-  Widget chatTileContainer(BuildContext context, int index, String _userName) {
+
+
+
+
+
+
+
+class CardList extends StatefulWidget {
+  CardList({required this.snapshot,required this.index, this.email,});
+  final QuerySnapshot snapshot;
+  final int index;
+  final email;
+
+  String buttonmsg = 'Request';
+
+  @override
+  State<CardList> createState() => _CardListState();
+}
+
+class _CardListState extends State<CardList> {
+
+
+  @override
+  Widget build(BuildContext context) {
+    var about=widget.snapshot.docs[widget.index]['about'];
+    var name = widget.snapshot.docs[widget.index]['user_name'];
+    var image = widget.snapshot.docs[widget.index]['profile_pic'];
+    var email = widget.snapshot.docs[widget.index]['email'];
+
+
     return Card(
-        key: Key('$index'),
         elevation: 3.0,
         shadowColor: Colors.blue,
         shape: RoundedRectangleBorder(
@@ -303,14 +327,18 @@ class _ChatAndActivityScreenState extends State<ChatAndActivityScreen> {
                     closedBuilder: (_, __) {
                       return CircleAvatar(
                         radius: 32.0,
-                        backgroundColor: Colors.blue[300],
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Colors.white,
-                          backgroundImage:
-                          ExactAssetImage('assets/images/google.png'),
-                          //getProperImageProviderForConnectionsCollection(
-                          //    _userName),
+                        backgroundColor: Colors.blue,
+                        child: ClipOval(
+                            child: (image != null)
+                                ? Image.network(image)
+                                :  CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: Colors.white,
+                              backgroundImage:
+                              ExactAssetImage('assets/images/google.png'),
+                              //getProperImageProviderForConnectionsCollection(
+                              //    _userName),
+                            )
                         ),
                       );
                     },
@@ -325,7 +353,7 @@ class _ChatAndActivityScreenState extends State<ChatAndActivityScreen> {
                   transitionDuration: Duration(milliseconds: 500),
                   transitionType: ContainerTransitionType.fadeThrough,
                   openBuilder: (context, openWidget) {
-                    return Center();
+                    return chatscreen(userName: name,about:about,image:image);
 
 
                     //   ChatScreen(
@@ -344,9 +372,9 @@ class _ChatAndActivityScreenState extends State<ChatAndActivityScreen> {
                       child: Column(
                         children: [
                           Text(
-                            _userName.length <= 18
-                                ? _userName
-                                : '${_userName.replaceRange(18, _userName.length, '...')}',
+                            name.length <= 16
+                                ? name
+                                : '${name.replaceRange(16, name.length, '...')}',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 18.0,
@@ -357,10 +385,8 @@ class _ChatAndActivityScreenState extends State<ChatAndActivityScreen> {
                             height: 12.0,
                           ),
 
-                          /// For Extract latest Conversation Message
-//                          _latestDataForConnectionExtractPerfectly(_userName)
                           Text(
-                            'Hellooooooooo',
+                            about,
                             style: TextStyle(color: Colors.blue[500]),
                           ),
                         ],
@@ -395,5 +421,6 @@ class _ChatAndActivityScreenState extends State<ChatAndActivityScreen> {
         ));
   }
 
-
 }
+
+

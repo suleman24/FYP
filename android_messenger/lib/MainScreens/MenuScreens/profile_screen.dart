@@ -11,8 +11,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
-
-
 late String imageup;
 
 
@@ -41,6 +39,11 @@ class _profilescreenState extends State<profilescreen> {
   late String createtime = widget.createtime;
   late String tempimg = widget.tempimg;
   late String imageUrl = widget.image;
+
+  initState() {
+    imageup = imageUrl;
+  }
+
 
 
   late final cont1 = TextEditingController()..text = name;
