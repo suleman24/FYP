@@ -1,3 +1,4 @@
+import 'package:android_messenger/auth/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -234,6 +235,9 @@ class _ChatAndActivityScreenState extends State<ChatAndActivityScreen> {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) return Center(
               child: CircularProgressIndicator(),);
+
+
+
 
             return ListView.builder(
                 itemCount: snapshot.data.docs.length,

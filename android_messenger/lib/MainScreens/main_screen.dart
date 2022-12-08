@@ -15,7 +15,8 @@ import 'general_connection_section.dart';
 
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({Key? key, this.name}) : super(key: key);
+  final name;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -25,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final _drawerController = ZoomDrawerController();
 
-  late String name = 'hello';
+  late String name = widget.name;
   late String image = '0';
   late String about = '';
   late String createdate = '';
@@ -33,10 +34,28 @@ class _MainScreenState extends State<MainScreen> {
   late String email = '';
   late String tempimg = '';
 
+  bool sfield = false;
 
 
 
     int _currIndex = 0;
+
+    @override
+
+
+    void searchfieldopen()
+    {
+      setState(() {
+        sfield = true;
+      });
+    }
+  void searchfieldclose()
+  {
+    setState(() {
+      sfield = false;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
             backgroundColor: Colors.white,
 
             floatingActionButton: FloatingActionButton(
-              child: Icon(
+              child: const Icon(
                 FontAwesomeIcons.plus
               ),
               onPressed: () async{
@@ -83,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
               backgroundColor: Colors.blue[500],
               elevation: 10.0,
               shadowColor: Colors.white70,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(40.0),
                   bottomRight: Radius.circular(40.0),
@@ -91,32 +110,49 @@ class _MainScreenState extends State<MainScreen> {
                 side: BorderSide(width: 0.7),
               ),
               title: Text(
-                "Suzo",
+                sfield==false?
+                "Suzo":'',
                 style: TextStyle(
                     fontSize: 25.0, fontFamily: 'Lora', letterSpacing: 1.0,color: Colors.white),
               ),
               actions: [
+
+                if(sfield==true)
+                  SizedBox(
+                    width: 300,
+                    height: 10,
+                    child: TextFormField(
+                      style: TextStyle(color: Colors.blue[900]),
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide:
+                            const BorderSide(width: 0.5, color: Colors.blue)),
+
+                        hintText: "Search",
+                        hintStyle: TextStyle(color: Colors.blue[900]),
+
+                      ),
+
+                    ),
+                  ),
+
                 Padding(
                   padding: EdgeInsets.only(right: 10.0),
-                  child: Icon(
-                    Icons.search_outlined,
-                    size: 25.0,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    right: 20.0,
-                  ),
                   child: IconButton(
-                    tooltip: 'Refresh',
+
+                    onPressed: (){
+                      if(sfield == false)
+                        searchfieldopen();
+                      else
+                        searchfieldclose();
+                    },
                     icon: Icon(
-                      Icons.refresh_outlined,
+                      Icons.search_outlined,
                       size: 25.0,
                     ),
-                    onPressed: () async {
-
-
-                    },
                   ),
                 ),
 
@@ -125,7 +161,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
 
 
-            body: TabBarView(
+            body: const TabBarView(
               children: [
 
                 ChatAndActivityScreen(),
@@ -147,14 +183,14 @@ class _MainScreenState extends State<MainScreen> {
 
     TabBar _bottom() {
       return TabBar(
-        indicatorPadding: EdgeInsets.only(left: 20.0, right: 20.0),
+        indicatorPadding: const EdgeInsets.only(left: 20.0, right: 20.0),
         labelColor: Colors.white,
         unselectedLabelColor: Colors.white60,
-        indicator: UnderlineTabIndicator(
+        indicator: const UnderlineTabIndicator(
             borderSide: BorderSide(width: 2.0, color: Colors.lightBlue),
             insets: EdgeInsets.symmetric(horizontal: 15.0)),
         automaticIndicatorColorAdjustment: true,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           fontFamily: 'Lora',
           fontWeight: FontWeight.w500,
           letterSpacing: 1.0,
@@ -168,7 +204,7 @@ class _MainScreenState extends State<MainScreen> {
           }
         },
         tabs: [
-          Tab(
+          const Tab(
             child: Text(
               "Chats",
               style: TextStyle(
@@ -193,7 +229,7 @@ class _MainScreenState extends State<MainScreen> {
           //     ),
           //   ),
           // ),
-          Tab(
+          const Tab(
             icon: Icon(
               Icons.store,
               size: 25.0, color: Colors.white
@@ -211,13 +247,13 @@ class _MainScreenState extends State<MainScreen> {
       child: Stack(
         children: [
           Container(
-            margin: EdgeInsets.symmetric(vertical: 30,horizontal: 30),
+            margin: const EdgeInsets.symmetric(vertical: 30,horizontal: 30),
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.blue,
                   ),
-                  borderRadius: BorderRadius.all(Radius.circular(55))
+                  borderRadius: const BorderRadius.all(Radius.circular(55))
               ),
 
               child:
@@ -237,7 +273,7 @@ class _MainScreenState extends State<MainScreen> {
                       width: 80,
                       child: (image != "0")
                           ? Image.network(image)
-                          :  CircleAvatar(
+                          :  const CircleAvatar(
                         radius: 30.0,
                         backgroundColor: Colors.white,
                         backgroundImage:
@@ -288,7 +324,7 @@ class _MainScreenState extends State<MainScreen> {
               child: Column(
                 children: [
 
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   GestureDetector(
@@ -301,7 +337,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
 
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Center(child:
@@ -313,7 +349,7 @@ class _MainScreenState extends State<MainScreen> {
 
 
 
-            SizedBox(
+            const SizedBox(
               height: 50.0,
             ),
             GestureDetector(
@@ -358,18 +394,18 @@ class _MainScreenState extends State<MainScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.person_outline_rounded,
                           color: Colors.white,
                         ),
-                        SizedBox(width: 5,),
-                        Text('Profile',style: TextStyle(color: Colors.white,fontSize: 18),),
+                        const SizedBox(width: 5,),
+                        const Text('Profile',style: TextStyle(color: Colors.white,fontSize: 18),),
                       ],
                     )
                 )
 
             ),
-            SizedBox(
+            const SizedBox(
               height: 30.0,
             ),
             // _menuOptions(Icons.settings, 'Setting'),
@@ -386,19 +422,19 @@ class _MainScreenState extends State<MainScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           FontAwesomeIcons.mailForward,
                           color: Colors.white,
                         ),
-                        SizedBox(width: 5,),
-                        Text('Support',style: TextStyle(color: Colors.white,fontSize: 18),),
+                        const SizedBox(width: 5,),
+                        const Text('Support',style: TextStyle(color: Colors.white,fontSize: 18),),
                       ],
                     )
                 )
 
             ),
 
-            SizedBox(
+            const SizedBox(
               height: 30.0,
             ),
             GestureDetector(
@@ -410,19 +446,19 @@ class _MainScreenState extends State<MainScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.description_outlined,
                           color: Colors.white,
                         ),
-                        SizedBox(width: 5,),
-                        Text('About',style: TextStyle(color: Colors.white,fontSize: 18),),
+                        const SizedBox(width: 5,),
+                        const Text('About',style: TextStyle(color: Colors.white,fontSize: 18),),
                       ],
                     )
                 )
 
             ),
 
-            SizedBox(
+            const SizedBox(
               height: 30.0,
             ),
             logout(),
@@ -439,21 +475,21 @@ class _MainScreenState extends State<MainScreen> {
       onTap: () async {
         AuthenticationHelper().signOut(context);
 
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Check()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Check(name: '',)));
       },
       child: Padding(
-        padding: EdgeInsets.fromLTRB(0,20, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0,20, 0, 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.exit_to_app_rounded,
               color: Colors.white,
             ),
-            SizedBox(
+            const SizedBox(
               width: 10.0,
             ),
-            Text(
+            const Text(
               'Logout',
               style: TextStyle(
                 fontSize: 20.0,

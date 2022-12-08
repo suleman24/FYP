@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:android_messenger/Services/google_maps.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:circle_list/circle_list.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-
 
 class GeneralMessagingSection extends StatefulWidget {
   const GeneralMessagingSection({Key? key}) : super(key: key);
@@ -78,8 +80,90 @@ class _GeneralMessagingSectionState extends State<GeneralMessagingSection> {
                       child: GestureDetector(
                         onTap: () async {
 
+
+
+
+
+                          showDialog(context: context,
+                              builder: (context) => AlertDialog(
+                                  insetPadding: EdgeInsets.fromLTRB(0,100,0,0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(200),
+                                ),
+                                actions: [
+                            CircleList(
+                            initialAngle: 55,
+                            outerRadius: MediaQuery.of(context).size.width / 3.05,
+                            innerRadius: MediaQuery.of(context).size.width / 5,
+                            showInitialAnimation: true,
+                            innerCircleColor: Colors.white,
+                            outerCircleColor: Colors.pink,
+                            origin: Offset(0, 0),
+                            rotateMode: RotateMode.allRotate,
+                            centerWidget: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    'Click image',style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15
+                                  ),
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                      'or'
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                      'Select from Gallery',style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15)
+                                  ),
+                                ),
+                              ],
+                            ),
+                            children: [
+                              IconButton(onPressed: (){
+
+                              },
+                                  icon: Icon(
+                                    Icons.camera_alt_rounded,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ),
+                              ),
+                              IconButton(onPressed: (){
+
+                              },
+                                icon: Icon(
+                                  FontAwesomeIcons.image,
+                                  color: Colors.white,
+                                  size: 30.0,
+                                ),
+                              ),
+
+
+                            ],
+                            ),
+
+                                ],
+                              ),
+                          );
+
+
+                            // FilePickerResult? result =
+                            // await FilePicker.platform.pickFiles(
+                            //   type: FileType.custom,
+                            //   allowedExtensions: ['jpg','png','jpeg'],
+                            // );
                         },
                         onLongPress: () async {
+
+
+
                         },
                         child: Icon(
                           Icons.camera_alt_rounded,
@@ -100,10 +184,76 @@ class _GeneralMessagingSectionState extends State<GeneralMessagingSection> {
                       child: GestureDetector(
                         onTap: () async {
 
-                        },
-                        onLongPress: () async {
+                          showDialog(context: context,
+                            builder: (context) => AlertDialog(
+                              insetPadding: EdgeInsets.fromLTRB(0,100,0,0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(200),
+                              ),
+                              actions: [
+                                CircleList(
+                                  initialAngle: 55,
+                                  outerRadius: MediaQuery.of(context).size.width / 3.05,
+                                  innerRadius: MediaQuery.of(context).size.width / 5,
+                                  showInitialAnimation: true,
+                                  innerCircleColor: Colors.white,
+                                  outerCircleColor: Colors.purple,
+                                  origin: Offset(0, 0),
+                                  rotateMode: RotateMode.allRotate,
+                                  centerWidget: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          'Capture Video',style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15
+                                        ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                            'or'
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                            'Select from Gallery',style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15)
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  children: [
+                                    IconButton(onPressed: (){
 
+                                    },
+                                      icon: Icon(
+                                        Icons.video_camera_back_outlined,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ),
+                                    ),
+                                    IconButton(onPressed: (){
+
+                                    },
+                                      icon: Icon(
+                                        Icons.video_collection_rounded,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ),
+                                    ),
+
+
+                                  ],
+                                ),
+
+                              ],
+                            ),
+                          );
                         },
+
                         child: Icon(
                           Icons.video_collection,
                           color: Colors.purple,
@@ -111,26 +261,7 @@ class _GeneralMessagingSectionState extends State<GeneralMessagingSection> {
                         ),
                       ),
                     ),
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(
-                            color: Colors.blue,
-                            width: 3,
-                          )),
-                      child: GestureDetector(
-                        onTap: () async {
-                          //_extraTextManagement(MediaTypes.Text);
-                        },
-                        child: Icon(
-                          Icons.text_fields_rounded,
-                          color: Colors.blue,
-                          size: 30.0,
-                        ),
-                      ),
-                    ),
+
                     Container(
                       width: 60,
                       height: 60,
@@ -142,7 +273,21 @@ class _GeneralMessagingSectionState extends State<GeneralMessagingSection> {
                           )),
                       child: GestureDetector(
                         onTap: () async {
-                          //await _documentSend();
+                          FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: [
+                              'pdf',
+                              'doc',
+                              'docx',
+                              'ppt',
+                              'pptx',
+                              'c',
+                              'cpp',
+                              'py',
+                              'text'
+                            ],
+                          );
                         },
                         child: Icon(
                           Icons.document_scanner_outlined,
@@ -161,7 +306,8 @@ class _GeneralMessagingSectionState extends State<GeneralMessagingSection> {
                             width: 3,
                           )),
                       child: GestureDetector(
-                        onTap: () async {
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>googlemaps()));
 
                         },
                         child: Icon(
@@ -187,7 +333,13 @@ class _GeneralMessagingSectionState extends State<GeneralMessagingSection> {
                           size: 30.0,
                         ),
                         onTap: () async {
-
+                          FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: [
+                              'mp3'
+                            ],
+                          );
                         },
                       ),
                     ),

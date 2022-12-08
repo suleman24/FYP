@@ -9,6 +9,10 @@
         android:label="android_messenger"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDcEIGWRhwYDAN9lorr0moHSHkBSPliQfA"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
