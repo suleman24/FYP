@@ -325,20 +325,29 @@ class _CardListState extends State<CardList> {
                       return Center();
                     },
                     closedBuilder: (_, __) {
-                      return CircleAvatar(
-                        radius: 32.0,
-                        backgroundColor: Colors.blue,
-                        child: ClipOval(
-                            child: (image != null)
-                                ? Image.network(image)
-                                :  CircleAvatar(
-                              radius: 30.0,
-                              backgroundColor: Colors.white,
-                              backgroundImage:
-                              ExactAssetImage('assets/images/google.png'),
-                              //getProperImageProviderForConnectionsCollection(
-                              //    _userName),
-                            )
+                      return Container(
+                        width: 50,
+                        height: 50,
+                        child: CircleAvatar(
+                          radius: 32.0,
+                          backgroundColor: Colors.transparent,
+                          child: ClipOval(
+                              child: Container(
+                                height: 80,
+                                width: 80,
+                                child: (image != null)
+                                    ? Image.network(image)
+                                    :  CircleAvatar(
+                                  radius: 30.0,
+                                  backgroundColor: Colors.white,
+                                  backgroundImage:
+                                  ExactAssetImage('assets/images/google.png'),
+                                  //getProperImageProviderForConnectionsCollection(
+                                  //    _userName),
+                                ),
+
+                              )
+                          ),
                         ),
                       );
                     },
